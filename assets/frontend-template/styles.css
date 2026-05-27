@@ -1,0 +1,159 @@
+:root {
+  color-scheme: dark;
+  --bg: #080b10;
+  --panel: #111620;
+  --line: #273244;
+  --text: #eef4ff;
+  --muted: #9aa8bd;
+  --gold: #d9b66a;
+  --blue: #6da8ff;
+  --green: #5fd39a;
+  --red: #ff7c7c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 28px;
+  padding: 42px;
+}
+
+.planner, .result article, .score {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.planner { padding: 28px; }
+
+header p {
+  color: var(--gold);
+  letter-spacing: 3px;
+  margin: 0 0 12px;
+  font-size: 12px;
+}
+
+h1 {
+  margin: 0 0 28px;
+  font-size: 34px;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.controls {
+  display: grid;
+  gap: 20px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+input, select, button {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #0c1018;
+  color: var(--text);
+  padding: 0 14px;
+  font: inherit;
+}
+
+input[type="range"] {
+  accent-color: var(--gold);
+  padding: 0;
+}
+
+output {
+  color: var(--gold);
+  justify-self: end;
+}
+
+button {
+  cursor: pointer;
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.result {
+  display: grid;
+  gap: 18px;
+}
+
+.score {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  align-items: center;
+  padding: 24px;
+}
+
+.score span {
+  color: var(--green);
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.score p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+article {
+  min-height: 210px;
+  padding: 22px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  color: var(--gold);
+  font-size: 17px;
+  letter-spacing: 0;
+}
+
+p, li {
+  color: var(--text);
+  line-height: 1.75;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+}
