@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 世界盃台灣球迷行程規劃器</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b10;
+      --panel: #111720;
+      --panel-2: #151d28;
+      --line: #303949;
+      --text: #edf4ff;
+      --muted: #9aa8bb;
+      --gold: #d9b56a;
+      --green: #63d49a;
+      --red: #ff7d7d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 24px 36px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-end;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      color: #7f8eaa;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: 3px;
+    }
+
+    header span {
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    main {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+      padding: 36px 28px;
+      display: grid;
+      grid-template-columns: minmax(320px, 0.8fr) minmax(520px, 1.2fr);
+      gap: 24px;
+    }
+
+    section,
+    article {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .controls {
+      padding: 28px;
+      align-self: start;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      color: #93a5cf;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 3px;
+    }
+
+    .field {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .field-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    output {
+      color: var(--gold);
+      font-family: Consolas, monospace;
+    }
+
+    select,
+    input[type="number"],
+    button {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #0b0f17;
+      color: var(--text);
+      padding: 0 14px;
+      font: inherit;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
+    }
+
+    .checks {
+      display: grid;
+      gap: 12px;
+      margin: 4px 0 24px;
+    }
+
+    .checks label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    button {
+      color: var(--gold);
+      border-color: var(--gold);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .result {
+      display: grid;
+      gap: 18px;
+    }
+
+    .score-card {
+      padding: 24px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    #score {
+      display: block;
+      color: var(--green);
+      font-size: 62px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .score-card small {
+      color: var(--muted);
+    }
+
+    .score-card p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    article {
+      min-height: 210px;
+      padding: 22px;
+      background: var(--panel-2);
+    }
+
+    article h3 {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    p,
+    li {
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--gold);
+      background: #0c1119;
+    }
+
+    .risk-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .risk {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #0b0f17;
+      font-size: 14px;
+    }
+
+    @media (max-width: 920px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        padding: 22px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>2026 世界盃台灣球迷行程規劃器</h1>
+      <p>FIFA WORLD CUP 2026 TRIP PLANNER</p>
+    </div>
+    <span>互動式 HTML 版本</span>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="行程輸入">
+      <h2>輸入條件</h2>
+
+      <div class="field">
+        <label for="region">觀賽區域</label>
+        <select id="region">
+          <option value="west">西岸：洛杉磯 / 舊金山灣區 / 西雅圖</option>
+          <option value="central">中南部：達拉斯 / 休士頓 / 堪薩斯城 / 亞特蘭大</option>
+          <option value="east">東岸：紐約紐澤西 / 費城 / 波士頓 / 邁阿密</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <div class="field-line">
+          <label for="days">行程天數</label>
+          <output id="daysValue">10 天</output>
+        </div>
+        <input id="days" type="range" min="6" max="21" value="10">
+      </div>
+
+      <div class="field">
+        <div class="field-line">
+          <label for="matches">觀賽場次</label>
+          <output id="matchesValue">2 場</output>
+        </div>
+        <input id="matches" type="range" min="1" max="5" value="2">
+      </div>
+
+      <div class="field">
+        <div class="field-line">
+          <label for="pace">移動強度</label>
+          <output id="paceValue">3</output>
+        </div>
+        <input id="pace" type="range" min="1" max="5" value="3">
+      </div>
+
+      <div class="field">
+        <label for="budget">每人預算上限（TWD）</label>
+        <input id="budget" type="number" min="80000" step="5000" value="180000">
+      </div>
+
+      <div class="checks">
+        <label><input id="firstTrip" type="checkbox" checked> 第一次到美國看球</label>
+        <label><input id="officialOnly" type="checkbox" checked> 球票以官方管道為優先</label>
+      </div>
+
+      <button id="calculate" type="button">產生行程建議</button>
+    </section>
+
+    <section class="result" aria-label="行程結果">
+      <div class="score-card">
+        <div>
+          <span id="score">82</span>
+          <small>適合度</small>
+        </div>
+        <p id="verdict">節奏穩定，適合第一次赴美看球。</p>
+      </div>
+
+      <div class="cards">
+        <article>
+          <h3>建議路線</h3>
+          <p id="routeText"></p>
+        </article>
+
+        <article>
+          <h3>預算估算</h3>
+          <p id="budgetText"></p>
+        </article>
+
+        <article>
+          <h3>行程骨架</h3>
+          <ol id="itinerary"></ol>
+        </article>
+
+        <article>
+          <h3>優先處理</h3>
+          <ul id="nextSteps"></ul>
+        </article>
+      </div>
+
+      <article>
+        <h3>預算表</h3>
+        <table>
+          <thead>
+            <tr><th>項目</th><th>估算</th></tr>
+          </thead>
+          <tbody id="budgetTable"></tbody>
+        </table>
+      </article>
+
+      <article>
+        <h3>風險提醒</h3>
+        <div id="riskList" class="risk-list"></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const regions = {
+      west: {
+        route: "建議以洛杉磯作為進出點，再安排舊金山灣區或西雅圖。這條線移動距離較可控，適合第一次赴美看球的台灣球迷。",
+        base: 92000,
+        days: ["抵達洛杉磯並調整時差", "安排第一場比賽與城市走訪", "轉往舊金山灣區或西雅圖", "第二場比賽，隔天保留彈性時間", "返回洛杉磯或銜接返台航班"],
+        risks: ["住宿價格波動", "比賽日交通管制", "時差影響", "返程航班銜接"]
+      },
+      central: {
+        route: "建議以達拉斯或休士頓作為主基地，再用國內線連接堪薩斯城或亞特蘭大。這條線適合想追多場比賽、可接受較高移動強度的球迷。",
+        base: 98000,
+        days: ["抵達達拉斯或休士頓", "完成第一場比賽與周邊交通測試", "搭國內線前往第二城市", "安排第二場或第三場比賽", "回到主要國際機場返台"],
+        risks: ["高溫與午後雷雨", "國內線延誤", "跨城市交通成本", "行李轉運"]
+      },
+      east: {
+        route: "建議以紐約紐澤西為核心，搭配費城或波士頓；若加入邁阿密，建議獨立安排一段航班。這條線城市體驗豐富，但預算要抓高。",
+        base: 108000,
+        days: ["抵達紐約並熟悉交通", "安排紐約紐澤西比賽", "前往費城或波士頓", "安排城市走訪與第二場比賽", "保留購物或延誤緩衝後返台"],
+        risks: ["住宿費偏高", "深夜散場交通", "熱門景點排隊", "城市間票價波動"]
+      }
+    };
+
+    const controls = {
+      region: document.querySelector("#region"),
+      days: document.querySelector("#days"),
+      matches: document.querySelector("#matches"),
+      pace: document.querySelector("#pace"),
+      budget: document.querySelector("#budget"),
+      firstTrip: document.querySelector("#firstTrip"),
+      officialOnly: document.querySelector("#officialOnly")
+    };
+
+    const output = {
+      daysValue: document.querySelector("#daysValue"),
+      matchesValue: document.querySelector("#matchesValue"),
+      paceValue: document.querySelector("#paceValue"),
+      score: document.querySelector("#score"),
+      verdict: document.querySelector("#verdict"),
+      routeText: document.querySelector("#routeText"),
+      budgetText: document.querySelector("#budgetText"),
+      itinerary: document.querySelector("#itinerary"),
+      nextSteps: document.querySelector("#nextSteps"),
+      budgetTable: document.querySelector("#budgetTable"),
+      riskList: document.querySelector("#riskList")
+    };
+
+    function money(value) {
+      return new Intl.NumberFormat("zh-TW", {
+        style: "currency",
+        currency: "TWD",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function renderList(items) {
+      return items.map((item) => `<li>${item}</li>`).join("");
+    }
+
+    function analyze() {
+      const region = regions[controls.region.value];
+      const days = Number(controls.days.value);
+      const matches = Number(controls.matches.value);
+      const pace = Number(controls.pace.value);
+      const budget = Number(controls.budget.value);
+      const airfare = region.base;
+      const lodging = days * 4200;
+      const local = days * 1800;
+      const tickets = matches * 18500;
+      const domestic = Math.max(0, pace - 1) * 9500;
+      const insurance = 5200;
+      const reserve = Math.round((airfare + lodging + local + tickets + domestic + insurance) * 0.12);
+      const estimate = airfare + lodging + local + tickets + domestic + insurance + reserve;
+      const gap = budget - estimate;
+      const firstTripPenalty = controls.firstTrip.checked && pace >= 4 ? 8 : 0;
+      const officialBonus = controls.officialOnly.checked ? 4 : -6;
+      const score = Math.max(35, Math.min(96, 78 + Math.floor(gap / 9000) + officialBonus - firstTripPenalty - Math.max(0, matches - 3) * 5));
+
+      output.daysValue.textContent = `${days} 天`;
+      output.matchesValue.textContent = `${matches} 場`;
+      output.paceValue.textContent = pace;
+      output.score.textContent = score;
+      output.score.style.color = score >= 75 ? "var(--green)" : score >= 60 ? "var(--gold)" : "var(--red)";
+      output.verdict.textContent = score >= 75
+        ? "節奏穩定，預算與移動安排大致可行。"
+        : score >= 60
+          ? "可以規劃，但要降低移動密度或提高預算緩衝。"
+          : "行程偏硬，建議先減少城市、場次或提高預算。";
+      output.routeText.textContent = region.route;
+      output.budgetText.textContent = `以 ${days} 天、${matches} 場、移動強度 ${pace} 估算，每人約 ${money(estimate)}。目前預算 ${money(budget)}，${gap >= 0 ? `尚有 ${money(gap)} 緩衝。` : `約超出 ${money(Math.abs(gap))}。`}`;
+      output.itinerary.innerHTML = renderList(region.days);
+      output.nextSteps.innerHTML = renderList([
+        "先確認護照效期、ESTA 資格與停留天數。",
+        "球票以 FIFA 官方管道或官方 hospitality 為優先。",
+        "球票確認後，優先鎖定可取消住宿。",
+        "跨城市移動至少保留半天緩衝，避免比賽日當天長途轉乘。"
+      ]);
+      output.budgetTable.innerHTML = [
+        ["台灣－美國來回機票", airfare],
+        ["美國國內交通", domestic],
+        ["住宿", lodging],
+        ["世界盃球票", tickets],
+        ["餐飲與日常交通", local],
+        ["旅遊保險與手機網路", insurance],
+        ["備用金", reserve],
+        ["合計", estimate]
+      ].map(([name, value]) => `<tr><td>${name}</td><td>${money(value)}</td></tr>`).join("");
+      output.riskList.innerHTML = [...region.risks, "旅遊保險", "手機網路", "匯率變動", "球票轉售風險"].map((item) => `<span class="risk">${item}</span>`).join("");
+    }
+
+    document.querySelector("#calculate").addEventListener("click", analyze);
+    Object.values(controls).forEach((control) => {
+      control.addEventListener("input", analyze);
+      control.addEventListener("change", analyze);
+    });
+    analyze();
+  </script>
+</body>
+</html>
